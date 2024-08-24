@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <div class="site-name">Admin Panel</div>
+        <div class="button-container">
+            <a href="{{ url_for('dashboard') }}" class="btn">Dashboard</a>
+            <a href="{{ url_for('index') }}" class="btn">Go to Home</a>
+            <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+        </div>
+    </header>
+
+    <div class="main">
+        <h1>Welcome to the Admin Panel, {{ session['username'] }}</h1>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Admin actions -->
+        <div class="admin-actions">
+            <h2>Manage Users</h2>
+            <form method="POST" action="{{ url_for('admin') }}">
+                <label for="username">Select a User:</label>
+                <select name="username" id="username">
+                    {% for user in users %}
+                        <option value="{{ user[0] }}">{{ user[1] }}</option> <!-- user[0] = user_id, user[1] = username -->
+                    {% endfor %}
+                </select>
+                <button type="submit" name="delete_user" class="btn">Delete User</button>
+                <button type="submit" name="make_admin" class="btn">Make Admin</button>
+		<button type="submit" name="remove_admin" class="btn">Remove Admin</button>
+            </form>
+
+            <h2>Manage Blogs</h2>
+            <form method="POST" action="{{ url_for('admin') }}">
+                <label for="blog">Select a Blog:</label>
+                <select name="blog" id="blog">
+                    {% for blog in blogs %}
+                        <option value="{{ blog[0] }}">{{ blog[1] }}</option> <!-- blog[0] = blog_id, blog[1] = blog_title -->
+                    {% endfor %}
+                </select>
+                <button type="submit" name="delete_blog" class="btn">Delete Blog</button>
+            </form>
+
+            <!-- Additional Admin actions can be added here -->
+        </div>
+    </div>
+
+</body>
+</html>
